@@ -43,10 +43,10 @@ module.exports = {
         );
         res.status(200).json({ token: token });
       } else {
-        res.status(400).json({ error: "Senha Incorreta" });
+        res.status(400).json({ ErroMsg: "Senha Incorreta" });
       }
     } else {
-      res.status(404).json({ error: "Usuário não existe" });
+      res.status(404).json({ ErroMsg: "Usuário não existe" });
     }
   },
 
@@ -64,8 +64,8 @@ module.exports = {
         return res.status(200).json({status: "ok"});
       }
     } catch (error) {
-      res.json({ status: "error", error: "invalid token" });
-      //throw new Error(error);
+      res.json({ status: "error", ErroMsg: "invalid token" });
+      console.log(error);
     }
   },
 
@@ -77,7 +77,7 @@ module.exports = {
     if (isUserValid) {
       //enviar email
     } else {
-      res.status(404).json({ error: "Usuário não existe" });
+      res.status(404).json({ ErroMsg: "Usuário não existe" });
     }
   }
 };
