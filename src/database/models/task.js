@@ -1,19 +1,25 @@
 const { Model, DataTypes } = require("sequelize");
 
-class DataColumn extends Model {
+class DataTask extends Model {
   static init(connection) {
     super.init(
       {
-        id:{
+        id: {
           type: DataTypes.INTEGER,
           primaryKey: true,
           unique: true,
           allowNull: false,
           autoIncrement: true,
         },
-        name: {
+        title: {
           type: DataTypes.STRING,
           allowNull: false,
+          autoIncrement: false,
+        },
+        description: {
+          type: DataTypes.STRING,
+          allowNull: false,
+          autoIncrement: false,
         },
       },
       {
@@ -22,17 +28,12 @@ class DataColumn extends Model {
     );
   }
 
-  static associate(models){
-    this.belongsTo(models.DataUser, {
-      foreignKey: 'user_id',
-      as: 'owner'
-    });
-
-    this.hasMany(models.DataTask, {
-      foreignKey: 'column_id',
-      as: 'tasks'
+  static associate(models) {
+    this.belongsTo(models.DataColumn, {//Many da erro
+      foreignKey: "column_id",
+      as: "owner",
     });
   }
 }
 
-module.exports = DataColumn;
+module.exports = DataTask;

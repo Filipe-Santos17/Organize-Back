@@ -15,9 +15,10 @@ module.exports = {
       return res.status(400).json({ ErroMsg: "Usuário não existe" });
     }
 
-    const allBoards = await DataColumn.findAll({ where: {
-      user_id: user_id
-    } });
+    const allBoards = await DataColumn.findAll({ 
+      where: { user_id: user_id },
+      include: { association: 'tasks' } 
+    });
 
     return res.status(201).json({status: "ok", allBoards});
   },
