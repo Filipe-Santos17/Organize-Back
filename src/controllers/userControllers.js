@@ -16,7 +16,7 @@ module.exports = {
       const salt = await bcrypt.genSalt(10);
       const hashPass = await bcrypt.hash(password, salt);
 
-      const user = await DataUser.create({ email, name, password: hashPass });
+      await DataUser.create({ email, name, password: hashPass });
 
       return res.status(201).json({status: "ok"});
     } else {
@@ -27,21 +27,28 @@ module.exports = {
   async LoginUser(req, res) {
     const { email, password } = req.body;
 
-    const user = await DataUser.findOne({ where: { email: email } });
+    if (!email || !password) {
+      return res.status(403).json({ ErroMsg: "Dados Incompletos" });
+    }
+
+    const user = await DataUser.findOne({raw: true, where: { email } })
 
     if (user) {
       const isPasswordValid = await bcrypt.compare(password, user.password);
 
       if (isPasswordValid) {
+        const userData = {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+        }
+
         token = jwt.sign(
-          {
-            id: user.id,
-            email: user.email,
-            first_name: user.first_name,
-          },
+          userData,
           process.env.SECRET
         );
-        res.status(200).json({ token: token });
+
+        res.status(200).json({ token, userData });
       } else {
         res.status(400).json({ ErroMsg: "Senha Incorreta" });
       }

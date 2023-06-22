@@ -3,12 +3,12 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    return queryInterface.createTable('data_users', {
-      email: {
-        type: Sequelize.STRING,
+    return queryInterface.createTable('data_columns', {
+      id: {
+        type: Sequelize.INTEGER,
         primaryKey: true,
         allowNull: false,
-        autoIncrement: false,
+        autoIncrement: true,
         unique: true,
       },
       name: {
@@ -16,10 +16,12 @@ module.exports = {
         allowNull: false,
         autoIncrement: false,
       },
-      password: {
-        type: Sequelize.STRING,
+      user_id:{
+        type: Sequelize.INTEGER,
         allowNull: false,
-        autoIncrement: false,
+        references: {model: 'data_users', key: 'id'},
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
       },
       created_at:{
         type: Sequelize.DATE,
@@ -28,9 +30,10 @@ module.exports = {
       updated_at:{
         type: Sequelize.DATE,
         allowNull: false,
-      }
+      },
     })
   },
+
   async down (queryInterface, Sequelize) {
     /**
      * Add reverting commands here.

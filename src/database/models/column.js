@@ -1,6 +1,6 @@
 const { Model, DataTypes } = require("sequelize");
 
-class DataUser extends Model {
+class DataColumn extends Model {
   static init(connection) {
     super.init(
       {
@@ -11,26 +11,23 @@ class DataUser extends Model {
           allowNull: false,
           autoIncrement: true,
         },
-        email: {
-          type: DataTypes.STRING,
-          primaryKey: false,
-          unique: true,
-          allowNull: false,
-        },
         name: {
           type: DataTypes.STRING,
           allowNull: false,
         },
-        password: {
-          type: DataTypes.STRING,
-          allowNull: false,
-        }
       },
       {
         sequelize: connection, //conexão com banco de dados
       }
     );
   }
+
+  static associate(models){
+    this.belongsTo(models.DataUser, {
+      foreignKey: 'user_id',
+      as: 'owner'
+    })
+  }
 }
 
-module.exports = DataUser;
+module.exports = DataColumn;
