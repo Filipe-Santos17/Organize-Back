@@ -7,7 +7,7 @@ module.exports = {
     const { title, description } = req.body;
     const { user_id, column_id } = req.params;
 
-    if (!user_id || !column_id) {
+    if (!user_id || !column_id || !title || !description) {
       return res.status(403).json({ ErroMsg: "Dados Incompletos" });
     }
 
@@ -20,7 +20,7 @@ module.exports = {
     const isValidTable = await DataColumn.findByPk(column_id);
 
     if(!isValidTable){
-      return res.status(400).json({ ErroMsg: "Board inexistente" });
+      return res.status(400).json({ ErroMsg: "Board Inexistente" });
     }
 
     const task = await DataTask.create({ title, description, column_id}); //task

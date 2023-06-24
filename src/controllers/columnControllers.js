@@ -15,12 +15,17 @@ module.exports = {
       return res.status(400).json({ ErroMsg: "Usuário não existe" });
     }
 
-    const allBoards = await DataColumn.findAll({ 
+    const boards = await DataColumn.findAll({ 
       where: { user_id: user_id },
-      include: { association: 'tasks' } 
+      include: [{
+        association: 'tasks',
+        include: [{
+          association: 'subtask',
+        }]
+      }] 
     });
 
-    return res.status(201).json({status: "ok", allBoards});
+    return res.status(201).json({status: "ok", boards});
   },
   
   async createColumn(req, res) {
@@ -77,6 +82,8 @@ module.exports = {
     if(!isValidUser){
       return res.status(400).json({ ErroMsg: "Usuário não existe" });
     }
+
+    //validar se a coluna existe
 
     await DataColumn.destroy(
       { where: { user_id: user_id, id: id}},

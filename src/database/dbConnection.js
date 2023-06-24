@@ -4,16 +4,18 @@ const dbConfig = require("./config/database");
 const User = require("./models/user");
 const Column = require("./models/column");
 const Tasks = require("./models/task");
-//const User = require("./models/user"); - Tabelas / boards
+const SubTasks = require("./models/subTasks");
 
 const connection = new sequelize(dbConfig);
 
 User.init(connection);
 Column.init(connection);
 Tasks.init(connection)
+SubTasks.init(connection)
 
 Column.associate(connection.models);
 Tasks.associate(connection.models);
+SubTasks.associate(connection.models);
 
 connection
   .authenticate()

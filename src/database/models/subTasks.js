@@ -1,6 +1,6 @@
 const { Model, DataTypes } = require("sequelize");
 
-class DataTask extends Model {
+class DataSubTask extends Model {
   static init(connection) {
     super.init(
       {
@@ -16,8 +16,8 @@ class DataTask extends Model {
           allowNull: false,
           autoIncrement: false,
         },
-        description: {
-          type: DataTypes.STRING,
+        is_completed: {
+          type: DataTypes.BOOLEAN,
           allowNull: false,
           autoIncrement: false,
         },
@@ -29,16 +29,11 @@ class DataTask extends Model {
   }
 
   static associate(models) {
-    this.belongsTo(models.DataColumn, {//Many da erro
-      foreignKey: "column_id",
+    this.belongsTo(models.DataTask, {//Many da erro
+      foreignKey: "task_id",
       as: "owner",
-    });
-
-    this.hasMany(models.DataSubTask, {
-      foreignKey: 'task_id',
-      as: 'subtask'
     });
   }
 }
 
-module.exports = DataTask;
+module.exports = DataSubTask;

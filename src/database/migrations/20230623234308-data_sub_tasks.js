@@ -1,44 +1,45 @@
-//user migrate
-'use strict';
+"use strict";
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up (queryInterface, Sequelize) {
-    return queryInterface.createTable('data_users', {
+  async up(queryInterface, Sequelize) {
+    queryInterface.createTable("data_sub_tasks", {
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
+        unique: true,
         allowNull: false,
         autoIncrement: true,
-        unique: true,
       },
-      email: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        autoIncrement: false,
-        unique: true,
-      },
-      name: {
+      title: {
         type: Sequelize.STRING,
         allowNull: false,
         autoIncrement: false,
       },
-      password: {
-        type: Sequelize.STRING,
+      is_completed: {
+        type: Sequelize.BOOLEAN,
         allowNull: false,
         autoIncrement: false,
       },
-      created_at:{
+      task_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: { model: "data_tasks", key: "id" },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
+      },
+      created_at: {
         type: Sequelize.DATE,
         allowNull: false,
       },
-      updated_at:{
+      updated_at: {
         type: Sequelize.DATE,
         allowNull: false,
-      }
-    })
+      },
+    });
   },
-  async down (queryInterface, Sequelize) {
-    await queryInterface.dropTable('data-users');
-  }
+
+  async down(queryInterface, Sequelize) {
+    await queryInterface.dropTable('data_sub_tasks');
+  },
 };
