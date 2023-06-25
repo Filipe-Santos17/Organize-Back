@@ -18,7 +18,7 @@ module.exports = {
 
       await DataUser.create({ email, name, password: hashPass });
 
-      return res.status(201).json({status: "ok"});
+      return res.status(201).json({ status: "ok" });
     } else {
       return res.status(406).json({ ErroMsg: "Usuario com esse email já existe" });
     }
@@ -31,7 +31,7 @@ module.exports = {
       return res.status(403).json({ ErroMsg: "Dados Incompletos" });
     }
 
-    const user = await DataUser.findOne({raw: true, where: { email } })
+    const user = await DataUser.findOne({ raw: true, where: { email } });
 
     if (user) {
       const isPasswordValid = await bcrypt.compare(password, user.password);
@@ -41,12 +41,9 @@ module.exports = {
           id: user.id,
           email: user.email,
           name: user.name,
-        }
+        };
 
-        token = jwt.sign(
-          userData,
-          process.env.SECRET
-        );
+        token = jwt.sign(userData, process.env.SECRET);
 
         res.status(200).json({ token, userData });
       } else {
@@ -58,25 +55,25 @@ module.exports = {
   },
 
   async ValidateToken(req, res) {
-    const token = req.headers["auth-token"];
+    const token = req.headers["authorizarion"];
 
     try {
       const tokenDecoded = jwt.verify(token, process.env.SECRET);
 
       const email = tokenDecoded.email;
 
-      const isUserValid = await DataUser.findOne({ email });
+      const isUserValid = await DataUser.findOne({ raw: true, where: { email } });
 
-      if(isUserValid){
-        return res.status(200).json({status: "ok"});
+      if (isUserValid) {
+        delete isUserValid.password //Usuário não pode receber a senha encripitada
+        return res.status(200).json({ status: "ok", user: isUserValid });
       }
     } catch (error) {
-      res.json({ status: "error", ErroMsg: "invalid token" });
-      console.log(error);
+      res.status(403).json({ status: "error", ErroMsg: "invalid token" });
     }
   },
 
-  async ForgetPassword(req,res){
+  async ForgetPassword(req, res) {
     const { email } = req.body;
 
     const isUserValid = await DataUser.findOne({ where: { email } });
@@ -86,5 +83,5 @@ module.exports = {
     } else {
       res.status(404).json({ ErroMsg: "Usuário não existe" });
     }
-  }
+  },
 };
